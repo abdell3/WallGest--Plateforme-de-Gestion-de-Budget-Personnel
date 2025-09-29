@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "user",
+    "password": "wallgestPass",
+    "database": "wallgest",
+    "host": "mysql",
+    "dialect": "mysql",
+    "port": 3311
+  },
+  "test": {
+    "username": "user",
+    "password": "wallgestPass",
+    "database": "wallgest_test",
+    "host": "mysql",
+    "dialect": "mysql",
+    "port": 3311
+  },
+  "production": {
+    "username": "user",
+    "password": "wallgestPass",
+    "database": "wallgest_prod",
+    "host": "mysql",
+    "dialect": "mysql",
+    "port": 3311
+  }
+}
