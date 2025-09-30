@@ -9,10 +9,9 @@ const PORT = process.env.PORT || 3100;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "supersecret",
+    secret: process.env.SESSION_SECRET ,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false },
@@ -23,11 +22,10 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 const authRoutes = require("./routes/auth");
-app.use("/auth", authRoutes);
+const webRoutes = require('./routes/web');
 
-app.get("/", (req, res) => {
-  res.render("home", { title: "Accueil" });
-});
+app.use("/auth", authRoutes);
+app.use('/', webRoutes);
 
 sequelize
   .authenticate()
@@ -44,4 +42,5 @@ sequelize
     console.error("❌ Unable to connect to the database:", err);
   });
 
+  
 module.exports = app;
