@@ -2,31 +2,49 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title><%= title %> | WallGest</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WallGest</title>
+  <link href="/styles/output.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
-
-  <header class="bg-blue-600 text-white p-4 shadow-md">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-xl font-bold">WallGest</h1>
-      <nav>
-        <ul class="flex gap-4">
-          <li><a href="/" class="hover:underline">Accueil</a></li>
-          <li><a href="/login" class="hover:underline">Connexion</a></li>
-          <li><a href="/register" class="hover:underline">Inscription</a></li>
-          <li><a href="/profile" class="hover:underline">Profil</a></li>
-        </ul>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-800">
+  <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="h-9 w-9 rounded-lg bg-blue-600 text-white grid place-items-center font-semibold">W</span>
+        <span class="text-xl font-semibold tracking-tight">WallGest</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="/" class="hover:text-blue-600">Accueil</a>
+        <% if (user) { %>
+          <a href="/dashboard" class="hover:text-blue-600">Dashboard</a>
+          <a href="/auth/profile" class="hover:text-blue-600">Profil</a>
+          <a href="/auth/logout" class="hover:text-blue-600">Déconnexion</a>
+        <% } else { %>
+          <a href="/auth/login" class="hover:text-blue-600">Connexion</a>
+          <a href="/auth/register" class="hover:text-blue-600">Inscription</a>
+        <% } %>
       </nav>
+      <div class="md:hidden">
+        <% if (user) { %>
+          <a href="/dashboard" class="px-3 py-2 rounded-md bg-blue-600 text-white text-sm">Dashboard</a>
+        <% } else { %>
+          <a href="/auth/login" class="px-3 py-2 rounded-md bg-blue-600 text-white text-sm">Se connecter</a>
+        <% } %>
+      </div>
     </div>
   </header>
-
-  <main class="flex-1 container mx-auto p-6">
+  <main class="max-w-7xl mx-auto px-4 py-10">
     <%- body %>
   </main>
-
-  <footer class="bg-gray-900 text-white text-center p-4 mt-10">
-    <p>© <%= new Date().getFullYear() %> WallGest. Tous droits réservés.</p>
+  <footer class="border-t border-slate-200 bg-white/70">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-slate-600 flex items-center justify-between">
+      <p>&copy; 2025 WallGest</p>
+      <div class="flex items-center gap-4">
+        <a href="/" class="hover:text-blue-600">Accueil</a>
+        <a href="/auth/login" class="hover:text-blue-600">Connexion</a>
+        <a href="/auth/register" class="hover:text-blue-600">Inscription</a>
+      </div>
+    </div>
   </footer>
 </body>
 </html>

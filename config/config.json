@@ -3,7 +3,7 @@
     "username": "user",
     "password": "wallgestPass",
     "database": "wallgest",
-    "host": "mysql",
+    "host": "localhost",
     "dialect": "mysql",
     "port": 3311
   },

@@ -6,8 +6,12 @@ router.get("/", (req, res) => {
   res.render("home", { title: "Accueil" });
 });
 
+router.get("/login", (req, res) => res.redirect("/auth/login"));
+router.get("/register", (req, res) => res.redirect("/auth/register"));
+router.get("/profile", (req, res) => res.redirect("/auth/profile"));
+
 router.get("/dashboard", isAuthenticated, (req, res) => {
-  res.render("dashboard", { user: req.session.user, title: "Dashboard" });
+  res.render("dashboard", { title: "Dashboard" });
 });
 
 module.exports = router;
