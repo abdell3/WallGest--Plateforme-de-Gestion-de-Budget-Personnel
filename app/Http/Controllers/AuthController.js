@@ -2,7 +2,7 @@ const UserService = require("../../Services/UserService");
 
 class AuthController {
   registerForm(req, res) {
-    res.render("register", { title: "Inscription" });
+    res.render("auth/register", { title: "Inscription" });
   }
 
   async register(req, res) {
@@ -11,13 +11,12 @@ class AuthController {
       await UserService.registerUser({ fName, lName, email, password });
       res.redirect("/auth/login");
     } catch (err) {
-      console.error("❌ Erreur register:", err.message);
       res.status(500).send("Erreur lors de l'inscription");
     }
   }
 
   loginForm(req, res) {
-    res.render("login", { title: "Connexion" });
+    res.render("auth/login", { title: "Connexion" });
   }
 
   async login(req, res) {
@@ -32,14 +31,13 @@ class AuthController {
       req.session.user = user;
       res.redirect("/auth/profile");
     } catch (err) {
-      console.error("❌ Erreur login:", err.message);
       res.status(500).send("Erreur lors de la connexion");
     }
   }
 
   profile(req, res) {
     if (!req.session.user) return res.redirect("/auth/login");
-    res.render("profile", { user: req.session.user, title: "Mon profil" });
+    res.render("auth/profile", { user: req.session.user, title: "Mon profil" });
   }
 
   logout(req, res) {

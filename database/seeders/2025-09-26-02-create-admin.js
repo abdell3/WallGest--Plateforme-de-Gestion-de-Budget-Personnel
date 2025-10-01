@@ -26,7 +26,7 @@ module.exports = {
     ]);
   },
 
-  async odwn(queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('Users', { email: 'abdo.abdell.2000@gmail.com' }, {});
   }
 };
