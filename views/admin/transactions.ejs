@@ -1,0 +1,91 @@
+<div class="flex h-screen bg-gray-50">
+  <aside class="w-64 bg-white border-r border-gray-200">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Administration</h2>
+      <nav class="space-y-2">
+        <a href="/admin/dashboard" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          <span class="mr-3">📊</span>
+          Dashboard
+        </a>
+        <a href="/admin/users" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          <span class="mr-3">👥</span>
+          Utilisateurs
+        </a>
+        <a href="/admin/categories" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          <span class="mr-3">📁</span>
+          Catégories
+        </a>
+        <a href="/admin/transactions" class="flex items-center px-3 py-2 text-sm font-medium rounded-md bg-blue-100 text-blue-700">
+          <span class="mr-3">💳</span>
+          Transactions
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="flex-1 overflow-auto">
+    <div class="p-8">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">Toutes les Transactions</h1>
+        <p class="text-gray-600">Vue d'ensemble de toutes les transactions de la plateforme</p>
+      </div>
+
+      <div class="bg-white rounded-lg border">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Référence</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% if (transactions && transactions.length) { %>
+                <% transactions.forEach(transaction => { %>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900"><%= transaction.reference %></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <%= transaction.Wallet && transaction.Wallet.User ? `${transaction.Wallet.User.fName} ${transaction.Wallet.User.lName}` : 'N/A' %>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <%= transaction.Wallet && transaction.Wallet.Category ? transaction.Wallet.Category.title : 'N/A' %>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <% if (transaction.deposit > 0) { %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Dépôt</span>
+                      <% } else { %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Retrait</span>
+                      <% } %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm <%= transaction.deposit > 0 ? 'text-green-600' : 'text-red-600' %>">
+                        <%= transaction.deposit > 0 ? '+' + transaction.deposit : '-' + transaction.withdraw %> MAD
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <%= new Date(transaction.createdAt).toLocaleDateString('fr-FR') %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" class="px-6 py-4 text-center text-gray-500">Aucune transaction trouvée</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
