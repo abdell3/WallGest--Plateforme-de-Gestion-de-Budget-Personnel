@@ -1,6 +1,12 @@
-const { Transaction } = require("../../database/models");
+const { Transaction, Wallet } = require("../../database/models");
 
 class TransactionRepository {
+  async findAll() {
+    return await Transaction.findAll({ 
+      include: [{ model: Wallet, include: ['Category', 'User'] }], 
+      order: [['createdAt', 'DESC']] 
+    });
+  }
 
   async findByWallet(walletId) { 
     return await Transaction.findAll({ 
