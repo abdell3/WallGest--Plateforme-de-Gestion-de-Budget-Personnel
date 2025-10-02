@@ -29,7 +29,11 @@ class AuthController {
       }
 
       req.session.user = user;
-      res.redirect("/dashboard");
+      if (user.role === 'Admin') {
+        res.redirect("/admin/dashboard");
+      } else {
+        res.redirect("/dashboard");
+      }
     } catch (err) {
       console.error("Login error:", err);
       res.status(500).send("Erreur lors de la connexion");
