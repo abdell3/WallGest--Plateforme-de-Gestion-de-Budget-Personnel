@@ -6,11 +6,20 @@ class UserRepository {
   }
 
   async findByEmail(email) {
-    return await User.findOne({ where: { email }, include: "role" });
+    return await User.findOne({ 
+      where: { 
+        email 
+      }, 
+      include: "role" 
+    });
   }
 
   async findRoleByName(name) {
-    return await Role.findOne({ where: { name } });
+    return await Role.findOne({ 
+      where: { 
+        name 
+      } 
+    });
   }
 }
 

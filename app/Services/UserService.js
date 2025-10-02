@@ -17,10 +17,14 @@ class UserService {
 
   async authenticate(email, password) {
     const user = await UserRepository.findByEmail(email);
-    if (!user) return null;
+    if (!user) {
+      return null
+    };
 
     const isValid = await user.validPassword(password);
-    if (!isValid) return null;
+    if (!isValid) {
+      return null
+    };
 
     return {
       id: user.id,
