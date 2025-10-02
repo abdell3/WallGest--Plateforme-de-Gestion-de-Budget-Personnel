@@ -1,6 +1,9 @@
 const TransactionRepository = require("../Repositories/TransactionRepository");
 
 class TransactionService {
+  async listAll() {
+    return await TransactionRepository.findAll();
+  }
 
   async findByWallet(walletId) {
     return await TransactionRepository.findByWallet(walletId);

@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt");
 const UserRepository = require("../Repositories/UserRepository");
 
 class UserService {
+  async listUsers() {
+    return await UserRepository.findAll();
+  }
   async registerUser({ fName, lName, email, password }) {
     const role = await UserRepository.findRoleByName("User");
     if (!role) throw new Error("Role 'User' non trouvé");
