@@ -6,20 +6,13 @@ const TransactionService = require("../../Services/TransactionService");
 
 class AdminController {
   async dashboard(req, res) {
-    const categories = await CategoryService.listCategories();
-    const requests = await CategoryRequestService.listRequests();
-    const users = await UserService.listUsers();
-    res.render("admin/dashboard", { categories, requests, users, title: "Admin Dashboard" });
+    const pendingRequests = await CategoryRequestService.listPendingRequests();
+    res.render("admin/dashboard", { pendingRequests, title: "Admin Dashboard" });
   }
 
   async approveRequest(req, res) {
     try {
-      await CategoryRequestService.updateRequest(req.params.id, { status: 'approved' });
-      const request = await CategoryRequestService.listRequests();
-      const approvedRequest = request.find(r => r.id == req.params.id);
-      if (approvedRequest) {
-        await CategoryService.createCategory({ title: approvedRequest.title, budget: 0 });
-      }
+      await CategoryRequestService.approveRequest(req.params.id);
       res.redirect("/admin/dashboard");
     } catch (err) {
       res.status(500).send("Erreur lors de l'approbation");
@@ -28,7 +21,7 @@ class AdminController {
 
   async rejectRequest(req, res) {
     try {
-      await CategoryRequestService.updateRequest(req.params.id, { status: 'rejected' });
+      await CategoryRequestService.rejectRequest(req.params.id);
       res.redirect("/admin/dashboard");
     } catch (err) {
       res.status(500).send("Erreur lors du rejet");

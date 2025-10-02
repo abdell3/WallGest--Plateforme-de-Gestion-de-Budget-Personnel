@@ -2,6 +2,14 @@ const { CategoryRequest, User } = require("../../database/models");
 
 class CategoryRequestRepository {
 
+  async findAllPending() {
+    return await CategoryRequest.findAll({ 
+      where: { status: 'pending' }, 
+      include: [{ model: User, attributes: ['fName', 'lName', 'email'] }],
+      order: [['createdAt', 'DESC']] 
+    });
+  }
+
   async findAll() {
     return await CategoryRequest.findAll({ include: [User], order: [['createdAt', 'DESC']] });
   }
