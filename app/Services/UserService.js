@@ -16,21 +16,28 @@ class UserService {
   }
 
   async authenticate(email, password) {
-    const user = await UserRepository.findByEmail(email);
-    if (!user) {
-      return null
-    };
+    try {
+      const user = await UserRepository.findByEmail(email);
+      if (!user) {
+        console.log("User not found:", email);
+        return null;
+      }
 
-    const isValid = await user.validPassword(password);
-    if (!isValid) {
-      return null
-    };
+      const isValid = await user.validPassword(password);
+      if (!isValid) {
+        console.log("Invalid password for user:", email);
+        return null;
+      }
 
-    return {
-      id: user.id,
-      email: user.email,
-      role: user.role.name,
-    };
+      return {
+        id: user.id,
+        email: user.email,
+        role: user.role.name,
+      };
+    } catch (error) {
+      console.error("Authentication error:", error);
+      throw error;
+    }
   }
 }
 

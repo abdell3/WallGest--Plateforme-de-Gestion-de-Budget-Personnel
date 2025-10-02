@@ -29,8 +29,9 @@ class AuthController {
       }
 
       req.session.user = user;
-      res.redirect("/auth/profile");
+      res.redirect("/dashboard");
     } catch (err) {
+      console.error("Login error:", err);
       res.status(500).send("Erreur lors de la connexion");
     }
   }

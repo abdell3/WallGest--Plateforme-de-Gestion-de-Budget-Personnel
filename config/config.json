@@ -3,9 +3,9 @@
     "username": "user",
     "password": "wallgestPass",
     "database": "wallgest",
-    "host": "localhost",
+    "host": "mysql",
     "dialect": "mysql",
-    "port": 3311
+    "port": 3306
   },
   "test": {
     "username": "user",
