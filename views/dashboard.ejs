@@ -4,6 +4,13 @@
       <h2 class="text-xl font-semibold mb-4">Catégories</h2>
       <ul class="space-y-2">
         <li><a href="/dashboard" class="hover:underline">Toutes</a></li>
+        <% if (categories && categories.length) { %>
+          <% categories.forEach(c => { %>
+            <li>
+              <a href="/dashboard/category/<%= c.id %>" class="hover:underline <%= (currentCategoryId === c.id) ? 'text-blue-600 font-semibold' : '' %>"><%= c.title %></a>
+            </li>
+          <% }) %>
+        <% } %>
       </ul>
     </div>
   </aside>
@@ -11,23 +18,42 @@
     <div class="bg-white rounded-xl border p-6">
       <h2 class="text-xl font-semibold mb-2">Résumé</h2>
       <div class="grid grid-cols-3 gap-4">
+        <% const walletsList = wallets || []; %>
+        <% let solde = 0, totalDepo = 0, totalWithdraw = 0; %>
+        <% walletsList.forEach(w => { solde += (w.amountG||0); totalDepo += (w.totalDepo||0); totalWithdraw += (w.totalWithdraw||0); }); %>
         <div class="p-4 rounded-lg border bg-white">
           <p class="text-sm text-slate-500 mb-1">Solde</p>
-          <p class="text-2xl font-bold">0 MAD</p>
+          <p class="text-2xl font-bold"><%= solde %> MAD</p>
         </div>
         <div class="p-4 rounded-lg border bg-white">
           <p class="text-sm text-slate-500 mb-1">Dépôts</p>
-          <p class="text-2xl font-bold">0 MAD</p>
+          <p class="text-2xl font-bold"><%= totalDepo %> MAD</p>
         </div>
         <div class="p-4 rounded-lg border bg-white">
           <p class="text-sm text-slate-500 mb-1">Retraits</p>
-          <p class="text-2xl font-bold">0 MAD</p>
+          <p class="text-2xl font-bold"><%= totalWithdraw %> MAD</p>
         </div>
       </div>
     </div>
     <div class="bg-white rounded-xl border p-6">
       <h2 class="text-xl font-semibold mb-4">Transactions</h2>
-      <p class="text-slate-600">Aucune transaction pour le moment.</p>
+      <% if (current && current.Transactions && current.Transactions.length) { %>
+        <div class="space-y-3">
+          <% current.Transactions.forEach(t => { %>
+            <div class="p-4 border rounded-md flex justify-between">
+              <div>
+                <p class="font-medium"><%= t.reference %></p>
+                <p class="text-sm text-slate-500"><%= new Date(t.createdAt).toLocaleDateString() %></p>
+              </div>
+              <div class="text-right">
+                <p class="<%= t.deposit>0 ? 'text-emerald-600' : 'text-red-600' %>"><%= t.deposit>0 ? '+'+t.deposit : '-'+t.withdraw %> MAD</p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="text-slate-600">Aucune transaction pour le moment.</p>
+      <% } %>
     </div>
   </div>
 </section>

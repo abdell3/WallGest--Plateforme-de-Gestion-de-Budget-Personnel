@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       Transaction.belongsTo(models.Wallet, { foreignKey: 'walletId' });
     }
   }
+
+  
   Transaction.init(
     {
       reference: {

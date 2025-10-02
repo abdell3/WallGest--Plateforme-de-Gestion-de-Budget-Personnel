@@ -2,6 +2,25 @@
   <div>
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Pilotez vos finances avec clarté</h1>
     <p class="text-slate-600 mb-6">Budgets, transactions, objectifs d’épargne et analyses — tout au même endroit.</p>
+    <% if (user && userSummary) { %>
+      <div class="mb-6 p-4 bg-white rounded-lg border">
+        <h3 class="text-lg font-semibold mb-2">Vos finances</h3>
+        <div class="grid grid-cols-3 gap-4 text-sm">
+          <div>
+            <p class="text-slate-500">Solde actuel</p>
+            <p class="text-xl font-bold"><%= userSummary.solde %> MAD</p>
+          </div>
+          <div>
+            <p class="text-slate-500">Dépôts totaux</p>
+            <p class="text-xl font-bold text-emerald-600"><%= userSummary.totalDepo %> MAD</p>
+          </div>
+          <div>
+            <p class="text-slate-500">Retraits totaux</p>
+            <p class="text-xl font-bold text-red-600"><%= userSummary.totalWithdraw %> MAD</p>
+          </div>
+        </div>
+      </div>
+    <% } %>
     <div class="flex items-center gap-3">
       <% if (user) { %>
         <a href="/dashboard" class="px-5 py-3 rounded-md bg-blue-600 text-white hover:bg-blue-700">Accéder au dashboard</a>
