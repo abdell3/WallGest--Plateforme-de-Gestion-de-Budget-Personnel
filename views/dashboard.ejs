@@ -1,60 +1,246 @@
-<section class="grid md:grid-cols-3 gap-6">
-  <aside class="md:col-span-1">
-    <div class="bg-white rounded-xl border p-6">
-      <h2 class="text-xl font-semibold mb-4">Catégories</h2>
-      <ul class="space-y-2">
-        <li><a href="/dashboard" class="hover:underline">Toutes</a></li>
-        <% if (categories && categories.length) { %>
-          <% categories.forEach(c => { %>
-            <li>
-              <a href="/dashboard/category/<%= c.id %>" class="hover:underline <%= (currentCategoryId === c.id) ? 'text-blue-600 font-semibold' : '' %>"><%= c.title %></a>
-            </li>
-          <% }) %>
-        <% } %>
-      </ul>
+<div class="flex h-screen bg-gray-50">
+  <aside class="w-64 bg-white border-r border-gray-200">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Gestion Portefeuille</h2>
+      <nav class="space-y-2">
+        <a href="/dashboard" class="flex items-center px-3 py-2 text-sm font-medium rounded-md <%= currentView === 'overview' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' %>">
+          <span class="mr-3">📊</span>
+          Accueil
+        </a>
+        <div class="mt-6">
+          <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Catégories</h3>
+          <div class="mt-2 space-y-1">
+            <% if (categories && categories.length) { %>
+              <% categories.forEach(category => { %>
+                <a href="/dashboard/category/<%= category.id %>" class="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md <%= (typeof currentCategory !== 'undefined' && currentCategory && currentCategory.id === category.id) ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' %>">
+                  <span><%= category.title %></span>
+                  <span class="text-xs text-gray-400"><%= category.budget %> MAD</span>
+                </a>
+              <% }) %>
+            <% } %>
+            <div class="px-3 py-2">
+              <form action="/categories" method="POST" class="flex gap-2">
+                <input type="text" name="title" placeholder="Nouvelle catégorie" class="flex-1 text-xs border rounded px-2 py-1" required>
+                <input type="number" name="budget" placeholder="Budget" class="w-16 text-xs border rounded px-2 py-1" required>
+                <button type="submit" class="text-xs bg-blue-600 text-white px-2 py-1 rounded">+</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
     </div>
   </aside>
-  <div class="md:col-span-2 space-y-6">
-    <div class="bg-white rounded-xl border p-6">
-      <h2 class="text-xl font-semibold mb-2">Résumé</h2>
-      <div class="grid grid-cols-3 gap-4">
-        <% const walletsList = wallets || []; %>
-        <% let solde = 0, totalDepo = 0, totalWithdraw = 0; %>
-        <% walletsList.forEach(w => { solde += (w.amountG||0); totalDepo += (w.totalDepo||0); totalWithdraw += (w.totalWithdraw||0); }); %>
-        <div class="p-4 rounded-lg border bg-white">
-          <p class="text-sm text-slate-500 mb-1">Solde</p>
-          <p class="text-2xl font-bold"><%= solde %> MAD</p>
+
+  <main class="flex-1 overflow-auto">
+    <div class="p-8">
+      <% if (currentView === 'overview') { %>
+        <div class="mb-8">
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">Vue d'ensemble</h1>
+          <p class="text-gray-600">Statistiques globales de tous vos portefeuilles</p>
         </div>
-        <div class="p-4 rounded-lg border bg-white">
-          <p class="text-sm text-slate-500 mb-1">Dépôts</p>
-          <p class="text-2xl font-bold"><%= totalDepo %> MAD</p>
-        </div>
-        <div class="p-4 rounded-lg border bg-white">
-          <p class="text-sm text-slate-500 mb-1">Retraits</p>
-          <p class="text-2xl font-bold"><%= totalWithdraw %> MAD</p>
-        </div>
-      </div>
-    </div>
-    <div class="bg-white rounded-xl border p-6">
-      <h2 class="text-xl font-semibold mb-4">Transactions</h2>
-      <% if (current && current.Transactions && current.Transactions.length) { %>
-        <div class="space-y-3">
-          <% current.Transactions.forEach(t => { %>
-            <div class="p-4 border rounded-md flex justify-between">
-              <div>
-                <p class="font-medium"><%= t.reference %></p>
-                <p class="text-sm text-slate-500"><%= new Date(t.createdAt).toLocaleDateString() %></p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-green-100 rounded-lg">
+                <span class="text-green-600 text-xl">💰</span>
               </div>
-              <div class="text-right">
-                <p class="<%= t.deposit>0 ? 'text-emerald-600' : 'text-red-600' %>"><%= t.deposit>0 ? '+'+t.deposit : '-'+t.withdraw %> MAD</p>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Solde Total</p>
+                <p class="text-2xl font-bold text-gray-900"><%= totalBalance || 0 %> MAD</p>
               </div>
             </div>
-          <% }) %>
+          </div>
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-blue-100 rounded-lg">
+                <span class="text-blue-600 text-xl">📈</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Dépôts Totaux</p>
+                <p class="text-2xl font-bold text-green-600"><%= totalDeposits || 0 %> MAD</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-red-100 rounded-lg">
+                <span class="text-red-600 text-xl">📉</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Retraits Totaux</p>
+                <p class="text-2xl font-bold text-red-600"><%= totalWithdraws || 0 %> MAD</p>
+              </div>
+            </div>
+          </div>
         </div>
-      <% } else { %>
-        <p class="text-slate-600">Aucune transaction pour le moment.</p>
+
+        <div class="bg-white rounded-lg border">
+          <div class="p-6 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">Répartition par Catégorie</h2>
+          </div>
+          <div class="p-6">
+            <% if (wallets && wallets.length) { %>
+              <div class="space-y-4">
+                <% wallets.forEach(wallet => { %>
+                  <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h3 class="font-medium text-gray-900"><%= wallet.Category ? wallet.Category.title : 'Sans catégorie' %></h3>
+                      <p class="text-sm text-gray-600">Budget: <%= wallet.Category ? wallet.Category.budget : 0 %> MAD</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-lg font-semibold text-gray-900"><%= wallet.amountG || 0 %> MAD</p>
+                      <p class="text-sm text-gray-600">
+                        +<%= wallet.totalDepo || 0 %> / -<%= wallet.totalWithdraw || 0 %>
+                      </p>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p class="text-gray-500 text-center py-8">Aucun portefeuille créé</p>
+            <% } %>
+          </div>
+        </div>
+
+      <% } else if (currentView === 'category' && currentCategory) { %>
+        <div class="mb-8">
+          <h1 class="text-2xl font-bold text-gray-900 mb-2"><%= currentCategory.title %></h1>
+          <p class="text-gray-600">Gestion du budget et des transactions</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-purple-100 rounded-lg">
+                <span class="text-purple-600 text-xl">🎯</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Budget</p>
+                <p class="text-xl font-bold text-gray-900"><%= currentCategory.budget %> MAD</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-green-100 rounded-lg">
+                <span class="text-green-600 text-xl">💰</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Solde</p>
+                <p class="text-xl font-bold text-gray-900"><%= currentWallet.amountG || 0 %> MAD</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-blue-100 rounded-lg">
+                <span class="text-blue-600 text-xl">📈</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Dépôts</p>
+                <p class="text-xl font-bold text-green-600"><%= currentWallet.totalDepo || 0 %> MAD</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-lg border">
+            <div class="flex items-center">
+              <div class="p-2 bg-red-100 rounded-lg">
+                <span class="text-red-600 text-xl">📉</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Retraits</p>
+                <p class="text-xl font-bold text-red-600"><%= currentWallet.totalWithdraw || 0 %> MAD</p>
+                <p class="text-xs text-gray-500">Max: <%= Math.floor(currentCategory.budget * 0.65) %> MAD</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="bg-white rounded-lg border">
+            <div class="p-6 border-b">
+              <h2 class="text-lg font-semibold text-gray-900">Gestion du Budget</h2>
+            </div>
+            <div class="p-6 space-y-6">
+              <form action="/dashboard/budget" method="POST" class="space-y-4">
+                <input type="hidden" name="categoryId" value="<%= currentCategory.id %>">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Budget Mensuel</label>
+                  <input type="number" name="budget" value="<%= currentCategory.budget %>" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Mettre à jour</button>
+              </form>
+
+              <div class="pt-4 border-t">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Limite de Retrait</h3>
+                <div class="bg-yellow-50 p-3 rounded-md">
+                  <p class="text-sm text-yellow-800">Maximum autorisé: <strong><%= Math.floor(currentCategory.budget * 0.65) %> MAD</strong> (65% du budget)</p>
+                  <p class="text-xs text-yellow-600 mt-1">Restant: <%= Math.floor(currentCategory.budget * 0.65) - (currentWallet.totalWithdraw || 0) %> MAD</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg border">
+            <div class="p-6 border-b">
+              <h2 class="text-lg font-semibold text-gray-900">Nouvelle Transaction</h2>
+            </div>
+            <div class="p-6">
+              <form action="/dashboard/transaction" method="POST" class="space-y-4">
+                <input type="hidden" name="walletId" value="<%= currentWallet.id %>">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Référence</label>
+                  <input type="text" name="reference" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Montant (MAD)</label>
+                  <input type="number" name="amount" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                  <select name="type" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                    <option value="deposit">Dépôt</option>
+                    <option value="withdraw">Retrait</option>
+                  </select>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">Ajouter Transaction</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 bg-white rounded-lg border">
+          <div class="p-6 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">Historique des Transactions</h2>
+          </div>
+          <div class="p-6">
+            <% if (transactions && transactions.length) { %>
+              <div class="space-y-3">
+                <% transactions.forEach(transaction => { %>
+                  <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h3 class="font-medium text-gray-900"><%= transaction.reference %></h3>
+                      <p class="text-sm text-gray-600"><%= new Date(transaction.createdAt).toLocaleDateString('fr-FR') %></p>
+                    </div>
+                    <div class="text-right">
+                      <% if (transaction.deposit > 0) { %>
+                        <p class="text-lg font-semibold text-green-600">+<%= transaction.deposit %> MAD</p>
+                        <p class="text-xs text-gray-500">Dépôt</p>
+                      <% } else { %>
+                        <p class="text-lg font-semibold text-red-600">-<%= transaction.withdraw %> MAD</p>
+                        <p class="text-xs text-gray-500">Retrait</p>
+                      <% } %>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p class="text-gray-500 text-center py-8">Aucune transaction pour cette catégorie</p>
+            <% } %>
+          </div>
+        </div>
       <% } %>
     </div>
-  </div>
-</section>
-
+  </main>
+</div>
