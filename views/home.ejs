@@ -1,62 +1,236 @@
-<section class="grid md:grid-cols-2 gap-10 items-center">
-  <div>
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Pilotez vos finances avec clarté</h1>
-    <p class="text-slate-600 mb-6">Budgets, transactions, objectifs d’épargne et analyses — tout au même endroit.</p>
-    <% if (user && userSummary) { %>
-      <div class="mb-6 p-4 bg-white rounded-lg border">
-        <h3 class="text-lg font-semibold mb-2">Vos finances</h3>
-        <div class="grid grid-cols-3 gap-4 text-sm">
-          <div>
-            <p class="text-slate-500">Solde actuel</p>
-            <p class="text-xl font-bold"><%= userSummary.solde %> MAD</p>
+<style>
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-fadeInUp { animation: fadeInUp 0.8s ease-out; }
+.animate-slideInLeft { animation: slideInLeft 0.8s ease-out; }
+.animate-slideInRight { animation: slideInRight 0.8s ease-out; }
+.animate-pulse-custom { animation: pulse 2s ease-in-out infinite; }
+
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 py-20">
+      <div class="text-center mb-16 animate-fadeInUp">
+        <h1 class="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          WallGest
+        </h1>
+        <p class="text-2xl md:text-3xl text-gray-700 mb-4 font-light">
+          La révolution de la gestion financière personnelle
+        </p>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          Transformez votre relation avec l'argent grâce à notre plateforme intelligente qui combine simplicité, puissance et innovation
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-16 items-center mb-20">
+        <div class="animate-slideInLeft">
+          <h2 class="text-4xl font-bold text-gray-900 mb-6">
+            Pourquoi choisir WallGest ?
+          </h2>
+          <div class="space-y-6">
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Intelligence Artificielle</h3>
+                <p class="text-gray-600">Algorithmes avancés pour analyser vos habitudes et optimiser vos finances automatiquement</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Sécurité Bancaire</h3>
+                <p class="text-gray-600">Chiffrement de niveau bancaire et protection multi-couches de vos données sensibles</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Analytics Avancés</h3>
+                <p class="text-gray-600">Tableaux de bord interactifs et prédictions pour anticiper vos besoins financiers</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p class="text-slate-500">Dépôts totaux</p>
-            <p class="text-xl font-bold text-emerald-600"><%= userSummary.totalDepo %> MAD</p>
-          </div>
-          <div>
-            <p class="text-slate-500">Retraits totaux</p>
-            <p class="text-xl font-bold text-red-600"><%= userSummary.totalWithdraw %> MAD</p>
+        </div>
+
+        <div class="animate-slideInRight">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-3xl transform rotate-6 animate-pulse-custom"></div>
+            <div class="relative bg-white rounded-3xl p-8 shadow-2xl">
+              <div class="animate-float">
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                  <div class="h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl"></div>
+                  <div class="h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-xl"></div>
+                  <div class="h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl"></div>
+                </div>
+                <div class="space-y-3">
+                  <div class="h-3 bg-gray-200 rounded-full"></div>
+                  <div class="h-3 bg-gray-200 rounded-full w-4/5"></div>
+                  <div class="h-3 bg-gray-200 rounded-full w-3/5"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    <% } %>
-    <div class="flex items-center gap-3">
+
       <% if (user) { %>
-        <a href="/dashboard" class="px-5 py-3 rounded-md bg-blue-600 text-white hover:bg-blue-700">Accéder au dashboard</a>
+        <div class="text-center mb-16 animate-fadeInUp">
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 max-w-4xl mx-auto shadow-xl">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Votre Tableau de Bord Financier</h3>
+            <% if (userSummary) { %>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+                  <div class="text-3xl font-bold"><%= userSummary.solde %> MAD</div>
+                  <div class="text-blue-100">Solde Total</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+                  <div class="text-3xl font-bold">+<%= userSummary.totalDepo %> MAD</div>
+                  <div class="text-green-100">Dépôts Totaux</div>
+                </div>
+                <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white">
+                  <div class="text-3xl font-bold">-<%= userSummary.totalWithdraw %> MAD</div>
+                  <div class="text-red-100">Retraits Totaux</div>
+                </div>
+              </div>
+            <% } %>
+            <a href="/dashboard" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+              Accéder à mon Dashboard
+            </a>
+          </div>
+        </div>
       <% } else { %>
-        <a href="/auth/register" class="px-5 py-3 rounded-md bg-blue-600 text-white hover:bg-blue-700">Créer un compte</a>
-        <a href="/auth/login" class="px-5 py-3 rounded-md border border-slate-300 hover:border-slate-400">Se connecter</a>
+        <div class="text-center mb-16 animate-fadeInUp">
+          <h3 class="text-3xl font-bold text-gray-900 mb-6">Commencez votre transformation financière</h3>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/auth/register" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              Créer un compte gratuit
+            </a>
+            <a href="/auth/login" class="inline-flex items-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:text-blue-600 transform hover:scale-105 transition-all duration-200 shadow-lg">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+              </svg>
+              Se connecter
+            </a>
+          </div>
+        </div>
       <% } %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div class="glass-effect rounded-2xl p-6 text-center animate-fadeInUp" style="animation-delay: 0.1s">
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h4 class="text-xl font-semibold text-gray-900 mb-2">Budgétisation Intelligente</h4>
+          <p class="text-gray-600">Créez des budgets adaptatifs qui évoluent avec vos habitudes</p>
+        </div>
+
+        <div class="glass-effect rounded-2xl p-6 text-center animate-fadeInUp" style="animation-delay: 0.2s">
+          <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h4 class="text-xl font-semibold text-gray-900 mb-2">Suivi en Temps Réel</h4>
+          <p class="text-gray-600">Surveillez vos dépenses instantanément avec des alertes personnalisées</p>
+        </div>
+
+        <div class="glass-effect rounded-2xl p-6 text-center animate-fadeInUp" style="animation-delay: 0.3s">
+          <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h4 class="text-xl font-semibold text-gray-900 mb-2">Objectifs Personnalisés</h4>
+          <p class="text-gray-600">Définissez et atteignez vos objectifs financiers avec notre coaching IA</p>
+        </div>
+
+        <div class="glass-effect rounded-2xl p-6 text-center animate-fadeInUp" style="animation-delay: 0.4s">
+          <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+            </svg>
+          </div>
+          <h4 class="text-xl font-semibold text-gray-900 mb-2">Rapports Avancés</h4>
+          <p class="text-gray-600">Exportez et analysez vos données avec des rapports détaillés</p>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-center text-white animate-fadeInUp">
+        <h3 class="text-4xl font-bold mb-4">Rejoignez la révolution financière</h3>
+        <p class="text-xl mb-8 text-blue-100">Plus de 10,000 utilisateurs nous font déjà confiance pour gérer leurs finances</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+            <div class="text-3xl font-bold">99.9%</div>
+            <div class="text-blue-100">Disponibilité</div>
+          </div>
+          <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+            <div class="text-3xl font-bold">256-bit</div>
+            <div class="text-blue-100">Chiffrement</div>
+          </div>
+          <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+            <div class="text-3xl font-bold">24/7</div>
+            <div class="text-blue-100">Support</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="mt-8 grid grid-cols-2 gap-4 text-sm">
-      <div class="p-4 rounded-lg border bg-white">
-        <p class="font-semibold">Budgétisation</p>
-        <p class="text-slate-600">Fixez des plafonds par catégorie et suivez vos dépenses.</p>
-      </div>
-      <div class="p-4 rounded-lg border bg-white">
-        <p class="font-semibold">Transactions</p>
-        <p class="text-slate-600">Ajoutez, modifiez, supprimez et exportez en CSV.</p>
-      </div>
-      <div class="p-4 rounded-lg border bg-white">
-        <p class="font-semibold">Objectifs</p>
-        <p class="text-slate-600">Définissez des objectifs d'épargne et suivez la progression.</p>
-      </div>
-      <div class="p-4 rounded-lg border bg-white">
-        <p class="font-semibold">Analyses</p>
-        <p class="text-slate-600">Graphiques et tendances pour comprendre vos habitudes.</p>
-      </div>
-    </div>
-  </div>
-  <div class="relative">
-    <div class="aspect-[4/3] rounded-xl border bg-white p-6 shadow-sm">
-      <div class="h-2 w-24 bg-slate-200 rounded mb-6"></div>
-      <div class="grid grid-cols-3 gap-4">
-        <div class="h-40 bg-gradient-to-t from-blue-200 to-blue-500 rounded"></div>
-        <div class="h-56 bg-gradient-to-t from-emerald-200 to-emerald-500 rounded"></div>
-        <div class="h-32 bg-gradient-to-t from-violet-200 to-violet-500 rounded"></div>
-      </div>
-      <div class="mt-6 h-3 bg-slate-100 rounded"></div>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
