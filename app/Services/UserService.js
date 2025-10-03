@@ -5,6 +5,14 @@ class UserService {
   async listUsers() {
     return await UserRepository.findAll();
   }
+
+  async countUsers() {
+    return await UserRepository.count();
+  }
+
+  async countUsersSince(date) {
+    return await UserRepository.countSince(date);
+  }
   async registerUser({ fName, lName, email, password }) {
     const role = await UserRepository.findRoleByName("User");
     if (!role) throw new Error("Role 'User' non trouvé");

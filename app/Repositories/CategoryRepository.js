@@ -1,4 +1,5 @@
 const { Category } = require("../../database/models");
+const { Op } = require("sequelize");
 
 class CategoryRepository {
   async findAll() { 
@@ -19,6 +20,16 @@ class CategoryRepository {
   }
   async delete(id) { 
     return await Category.destroy({ where: { id } }); 
+  }
+
+  async countSince(date) {
+    return await Category.count({
+      where: {
+        createdAt: {
+          [Op.gte]: date
+        }
+      }
+    });
   }
 }
 

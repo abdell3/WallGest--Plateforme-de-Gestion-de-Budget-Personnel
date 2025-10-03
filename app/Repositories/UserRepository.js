@@ -1,4 +1,5 @@
 const { User, Role } = require("../../database/models");
+const { Op } = require("sequelize");
 
 class UserRepository {
   async findAll() {
@@ -22,6 +23,20 @@ class UserRepository {
       where: { 
         name 
       } 
+    });
+  }
+
+  async count() {
+    return await User.count();
+  }
+
+  async countSince(date) {
+    return await User.count({
+      where: {
+        createdAt: {
+          [Op.gte]: date
+        }
+      }
     });
   }
 }

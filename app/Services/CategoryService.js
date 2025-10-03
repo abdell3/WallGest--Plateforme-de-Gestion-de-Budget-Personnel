@@ -21,6 +21,10 @@ class CategoryService {
   async deleteCategory(id) { 
     return await CategoryRepository.delete(id); 
   }
+
+  async countCategoriesSince(date) { 
+    return await CategoryRepository.countSince(date); 
+  }
 }
 
 module.exports = new CategoryService();
