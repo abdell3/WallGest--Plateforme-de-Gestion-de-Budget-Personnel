@@ -46,7 +46,7 @@ router.post("/dashboard/category-request", isAuthenticated, async (req, res) => 
 router.get("/admin/dashboard", isAuthenticated, isAdmin, (req, res) => AdminController.dashboard(req, res));
 router.get("/admin/users", isAuthenticated, isAdmin, (req, res) => AdminController.users(req, res));
 router.get("/admin/categories", isAuthenticated, isAdmin, (req, res) => AdminController.categories(req, res));
-router.get("/admin/transactions", isAuthenticated, isAdmin, (req, res) => AdminController.transactions(req, res));
+router.get("/admin/statistics", isAuthenticated, isAdmin, (req, res) => AdminController.statistics(req, res));
 router.post("/admin/requests/:id/approve", isAuthenticated, isAdmin, (req, res) => AdminController.approveRequest(req, res));
 router.post("/admin/requests/:id/reject", isAuthenticated, isAdmin, (req, res) => AdminController.rejectRequest(req, res));
 

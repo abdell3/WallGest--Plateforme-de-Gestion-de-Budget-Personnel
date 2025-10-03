@@ -24,6 +24,22 @@ class TransactionService {
   async deleteTransaction(id) {
     return await TransactionRepository.delete(id);
   }
+
+  async countTransactions() {
+    return await TransactionRepository.count();
+  }
+
+  async getTotalDeposits() {
+    return await TransactionRepository.getTotalDeposits();
+  }
+
+  async getTotalWithdrawals() {
+    return await TransactionRepository.getTotalWithdrawals();
+  }
+
+  async countTransactionsSince(date) {
+    return await TransactionRepository.countSince(date);
+  }
 }
 
 module.exports = new TransactionService();

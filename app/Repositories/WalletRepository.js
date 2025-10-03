@@ -6,7 +6,7 @@ class WalletRepository {
       where: { 
         userId 
       }, 
-      include: [Category] 
+      include: [{ model: Category }] 
     });
   }
   async findById(id) {

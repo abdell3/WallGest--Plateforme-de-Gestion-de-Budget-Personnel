@@ -17,15 +17,16 @@ class DashboardController {
       totalWithdraws += wallet.totalWithdraw || 0;
     }
     
-    res.render("dashboard", { 
-      categories, 
-      wallets,
-      totalBalance,
-      totalDeposits,
-      totalWithdraws,
-      currentView: 'overview',
-      title: "Gestion de Portefeuille" 
-    });
+        res.render("dashboard", { 
+          categories, 
+          wallets,
+          totalBalance,
+          totalDeposits,
+          totalWithdraws,
+          currentView: 'overview',
+          title: "Gestion de Portefeuille",
+          layout: "layouts/dashboard"
+        });
   }
 
   async category(req, res) {
@@ -47,15 +48,16 @@ class DashboardController {
     
     const transactions = await TransactionService.findByWallet(wallet.id);
     
-    res.render("dashboard", { 
-      categories, 
-      wallets,
-      currentCategory: category,
-      currentWallet: wallet,
-      transactions,
-      currentView: 'category',
-      title: `Catégorie: ${category.title}` 
-    });
+        res.render("dashboard", { 
+          categories, 
+          wallets,
+          currentCategory: category,
+          currentWallet: wallet,
+          transactions,
+          currentView: 'category',
+          title: `Catégorie: ${category.title}`,
+          layout: "layouts/dashboard"
+        });
   }
 
   async addTransaction(req, res) {
