@@ -16,28 +16,19 @@ class TransactionController {
         reference, 
         amount, 
         type } = req.body;
-      const wallet = await WalletService.getWallet(walletId);
-      if (!wallet) return res.status(404).send("Portefeuille non trouvé");
-
+      
       const deposit = type === 'deposit' ? parseInt(amount) : 0;
       const withdraw = type === 'withdraw' ? parseInt(amount) : 0;
 
-      const transaction = await TransactionService.createTransaction({
-        walletId,
+      const transaction = await TransactionService.createTransactionWithValidation(walletId, {
         reference,
         deposit,
         withdraw
       });
 
-      await WalletService.updateWallet(walletId, {
-        amountG: wallet.amountG + deposit - withdraw,
-        totalDepo: wallet.totalDepo + deposit,
-        totalWithdraw: wallet.totalWithdraw + withdraw
-      });
-
       res.redirect("/transactions");
     } catch (err) {
-      res.status(500).send("Erreur lors de la création de la transaction");
+      res.status(400).json({ error: err.message });
     }
   }
 
