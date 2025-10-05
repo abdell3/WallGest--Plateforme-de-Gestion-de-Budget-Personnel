@@ -7,8 +7,18 @@ class AuthController {
 
   async register(req, res) {
     try {
-      const { fName, lName, email, password } = req.body;
-      await UserService.registerUser({ fName, lName, email, password });
+      const { 
+        fName, 
+        lName, 
+        email, 
+        password 
+      } = req.body;
+      await UserService.registerUser({ 
+        fName, 
+        lName, 
+        email, 
+        password 
+      });
       res.redirect("/auth/login");
     } catch (err) {
       res.status(500).send("Erreur lors de l'inscription");

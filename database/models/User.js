@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsTo(models.Role, { foreignKey: 'roleId', as: 'role' });
       User.hasMany(models.Wallet, { foreignKey: 'userId' });
+      User.hasMany(models.SavingGoal, { foreignKey: 'userId' });
     }
     async validPassword(password) {
       return await bcrypt.compare(password, this.password);

@@ -1,11 +1,13 @@
 const CategoryService = require("../../Services/CategoryService");
 const WalletService = require("../../Services/WalletService");
 const TransactionService = require("../../Services/TransactionService");
+const SavingGoalService = require("../../Services/SavingGoalService");
 
 class DashboardController {
   async index(req, res) {
     const categories = await CategoryService.listCategories();
     const wallets = await WalletService.listUserWallets(req.session.user.id);
+    const savingGoals = await SavingGoalService.listUserSavingGoals(req.session.user.id);
     
     let totalBalance = 0;
     let totalDeposits = 0;
@@ -20,6 +22,7 @@ class DashboardController {
         res.render("dashboard", { 
           categories, 
           wallets,
+          savingGoals,
           totalBalance,
           totalDeposits,
           totalWithdraws,
@@ -34,6 +37,7 @@ class DashboardController {
     const wallets = await WalletService.listUserWallets(req.session.user.id);
     const categoryId = parseInt(req.params.id, 10);
     const category = await CategoryService.findById(categoryId);
+    const savingGoals = await SavingGoalService.getCategorySavingGoals(categoryId, req.session.user.id);
     
     let wallet = wallets.find(w => w.categoryId === categoryId);
     if (!wallet) {
@@ -54,57 +58,51 @@ class DashboardController {
           currentCategory: category,
           currentWallet: wallet,
           transactions,
+          savingGoals,
           currentView: 'category',
           title: `Catégorie: ${category.title}`,
-          layout: "layouts/dashboard"
+          layout: "layouts/dashboard",
+          req
         });
   }
 
   async addTransaction(req, res) {
     try {
-      const { walletId, reference, amount, type } = req.body;
-      const wallet = await WalletService.getWallet(walletId);
-      const category = await CategoryService.findById(wallet.categoryId);
+      const { walletId, reference, amount, type } = req.body || {};
       
-      const amountInt = parseInt(amount);
-      
-      if (type === 'withdraw') {
-        const maxWithdraw = Math.floor(category.budget * 0.65);
-        const currentWithdraws = wallet.totalWithdraw || 0;
-        
-        if (currentWithdraws + amountInt > maxWithdraw) {
-          return res.status(400).json({ 
-            error: `Retrait refusé. Limite: ${maxWithdraw} MAD (65% du budget)` 
-          });
-        }
+      if (!walletId) {
+        return res.redirect(`/dashboard/category/${req.params.id || ''}?error=Wallet ID is required`);
       }
       
+      const wallet = await WalletService.getWallet(walletId);
+      if (!wallet) {
+        return res.redirect(`/dashboard/category/${req.params.id || ''}?error=Wallet not found`);
+      }
+      
+      const amountInt = parseInt(amount);
       const deposit = type === 'deposit' ? amountInt : 0;
       const withdraw = type === 'withdraw' ? amountInt : 0;
       
-      await TransactionService.createTransaction({
-        walletId,
+      await TransactionService.createTransactionWithValidation(walletId, {
         reference,
         deposit,
         withdraw
       });
       
-      await WalletService.updateWallet(walletId, {
-        amountG: wallet.amountG + deposit - withdraw,
-        totalDepo: wallet.totalDepo + deposit,
-        totalWithdraw: wallet.totalWithdraw + withdraw
-      });
-      
-      res.redirect(`/dashboard/category/${wallet.categoryId}`);
+      res.redirect(`/dashboard/category/${wallet.categoryId}?success=Transaction created successfully`);
     } catch (err) {
-      res.status(500).send("Erreur lors de la transaction");
+      const categoryId = req.params.id || '';
+      res.redirect(`/dashboard/category/${categoryId}?error=${encodeURIComponent(err.message)}`);
     }
   }
 
   async updateBudget(req, res) {
     try {
       const { categoryId, budget } = req.body;
-      await CategoryService.updateCategory(categoryId, { budget: parseInt(budget) });
+      await CategoryService.updateCategory(categoryId, 
+        { 
+          budget: parseInt(budget) 
+        });
       res.redirect(`/dashboard/category/${categoryId}`);
     } catch (err) {
       res.status(500).send("Erreur lors de la mise à jour du budget");

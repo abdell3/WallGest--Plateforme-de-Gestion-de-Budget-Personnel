@@ -8,6 +8,7 @@ const AdminController = require("../app/Http/Controllers/AdminController");
 const CategoryRequestService = require("../app/Services/CategoryRequestService");
 const ReportController = require("../app/Http/Controllers/ReportController");
 const WalletService = require("../app/Services/WalletService");
+const SavingGoalController = require("../app/Http/Controllers/SavingGoalController");
 
 router.get("/", async (req, res) => {
   let userSummary = null;
@@ -54,5 +55,12 @@ router.post("/admin/categories", isAuthenticated, isAdmin, (req, res) => Categor
 router.post("/admin/categories/:id/delete", isAuthenticated, isAdmin, (req, res) => CategoryController.delete(req, res));
 
 router.get("/reports/export", isAuthenticated, (req, res) => ReportController.export(req, res));
+
+router.get("/saving-goals", isAuthenticated, (req, res) => SavingGoalController.index(req, res));
+router.post("/saving-goals", isAuthenticated, (req, res) => SavingGoalController.create(req, res));
+router.get("/saving-goals/:id", isAuthenticated, (req, res) => SavingGoalController.show(req, res));
+router.put("/saving-goals/:id", isAuthenticated, (req, res) => SavingGoalController.update(req, res));
+router.delete("/saving-goals/:id", isAuthenticated, (req, res) => SavingGoalController.delete(req, res));
+router.post("/saving-goals/:id/progress", isAuthenticated, (req, res) => SavingGoalController.addProgress(req, res));
 
 module.exports = router;

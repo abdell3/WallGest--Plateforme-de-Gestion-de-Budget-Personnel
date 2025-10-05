@@ -6,7 +6,10 @@ class ReportController {
   async index(req, res) {
     const wallets = await WalletService.listUserWallets(req.session.user.id);
     const categories = await CategoryService.listCategories();
-    res.render("reports/index", { wallets, categories, title: "Rapports" });
+    res.render("reports/index", { 
+      wallets, 
+      categories, 
+      title: "Rapports" });
   }
 
   async export(req, res) {

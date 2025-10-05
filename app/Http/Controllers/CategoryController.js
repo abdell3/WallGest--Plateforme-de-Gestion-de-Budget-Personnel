@@ -4,7 +4,10 @@ class CategoryController {
   async create(req, res) {
     try {
       const { title, budget } = req.body;
-      await CategoryService.createCategory({ title, budget: parseInt(budget) || 0 });
+      await CategoryService.createCategory({ 
+        title, 
+        budget: parseInt(budget) || 0 
+      });
       res.redirect("/admin/categories");
     } catch (err) {
       res.status(500).send("Erreur lors de la création de la catégorie");

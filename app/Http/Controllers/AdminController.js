@@ -5,9 +5,14 @@ const WalletService = require("../../Services/WalletService");
 const TransactionService = require("../../Services/TransactionService");
 
 class AdminController {
+
   async dashboard(req, res) {
     const pendingRequests = await CategoryRequestService.listPendingRequests();
-    res.render("admin/dashboard", { pendingRequests, title: "Admin Dashboard", layout: "layouts/admin" });
+    res.render("admin/dashboard", { 
+      pendingRequests, 
+      title: "Admin Dashboard", 
+      layout: "layouts/admin" 
+    });
   }
 
   async approveRequest(req, res) {
@@ -30,17 +35,29 @@ class AdminController {
 
   async users(req, res) {
     const users = await UserService.listUsers();
-    res.render("admin/users", { users, title: "Gestion Utilisateurs", layout: "layouts/admin" });
+    res.render("admin/users", { 
+      users, 
+      title: "Gestion Utilisateurs", 
+      layout: "layouts/admin" 
+    });
   }
 
   async categories(req, res) {
     const categories = await CategoryService.listCategories();
-    res.render("admin/categories", { categories, title: "Gestion Catégories", layout: "layouts/admin" });
+    res.render("admin/categories", { 
+      categories, 
+      title: "Gestion Catégories", 
+      layout: "layouts/admin" 
+    });
   }
 
   async statistics(req, res) {
     const stats = await this.calculateStatistics();
-    res.render("admin/transactions", { stats, title: "Statistiques Plateforme", layout: "layouts/admin" });
+    res.render("admin/transactions", { 
+      stats, 
+      title: "Statistiques Plateforme", 
+      layout: "layouts/admin" 
+    });
   }
 
   async calculateStatistics() {
