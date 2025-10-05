@@ -11,7 +11,11 @@ class TransactionController {
 
   async create(req, res) {
     try {
-      const { walletId, reference, amount, type } = req.body;
+      const { 
+        walletId, 
+        reference, 
+        amount, 
+        type } = req.body;
       const wallet = await WalletService.getWallet(walletId);
       if (!wallet) return res.status(404).send("Portefeuille non trouvé");
 

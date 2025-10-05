@@ -104,7 +104,10 @@ class DashboardController {
   async updateBudget(req, res) {
     try {
       const { categoryId, budget } = req.body;
-      await CategoryService.updateCategory(categoryId, { budget: parseInt(budget) });
+      await CategoryService.updateCategory(categoryId, 
+        { 
+          budget: parseInt(budget) 
+        });
       res.redirect(`/dashboard/category/${categoryId}`);
     } catch (err) {
       res.status(500).send("Erreur lors de la mise à jour du budget");
